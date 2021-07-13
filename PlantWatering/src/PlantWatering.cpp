@@ -1,3 +1,9 @@
+/******************************************************/
+//       THIS IS A GENERATED FILE - DO NOT EDIT       //
+/******************************************************/
+
+#include "Particle.h"
+#line 1 "c:/Users/russe/Desktop/IoT/projects/PlantWatering/PlantWatering/src/PlantWatering.ino"
 /*
  * Project PlantWatering
  * Description: Code to ensure my plant stays watered
@@ -18,6 +24,16 @@
 #include "Adafruit_MQTT/Adafruit_MQTT.h" 
 #include "Adafruit_MQTT/Adafruit_MQTT_SPARK.h" 
 
+void setup();
+void loop();
+void pinSetUp();
+void OLEDSetUp();
+void moistureDisplay();
+void bmeRead();
+void publishReadings();
+void MQTT_connect();
+void runPump();
+#line 21 "c:/Users/russe/Desktop/IoT/projects/PlantWatering/PlantWatering/src/PlantWatering.ino"
 SYSTEM_MODE(SEMI_AUTOMATIC);
 
 
