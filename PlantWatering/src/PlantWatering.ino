@@ -9,9 +9,16 @@
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
 #include <Grove_Air_quality_Sensor.h>
+#include <Wire.h>
+#include <Adafruit_BME280.h>
+
+// Pins
+const int PUMP_PIN = A4;
+const int 
 
 // setup() runs once, when the device is first turned on.
 void setup() {
+	Serial.begin(115200);
 
 }
 
