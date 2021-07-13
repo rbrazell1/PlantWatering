@@ -11,7 +11,7 @@
  * Date: 7-12-2021
  */
 
-#include "credentials.h"
+#include "key.h""
 #include "IOTTimer.h"
 
 #include <Wire.h>
@@ -24,6 +24,7 @@
 #include "Adafruit_MQTT/Adafruit_MQTT.h" 
 #include "Adafruit_MQTT/Adafruit_MQTT_SPARK.h" 
 
+// Pins
 void setup();
 void loop();
 void pinSetUp();
@@ -33,11 +34,7 @@ void bmeRead();
 void publishReadings();
 void MQTT_connect();
 void runPump();
-#line 21 "c:/Users/russe/Desktop/IoT/projects/PlantWatering/PlantWatering/src/PlantWatering.ino"
-SYSTEM_MODE(SEMI_AUTOMATIC);
-
-
-// Pins
+#line 22 "c:/Users/russe/Desktop/IoT/projects/PlantWatering/PlantWatering/src/PlantWatering.ino"
 const int SOIL_PIN = A0;
 const int PUMP_PIN = A4;
 
@@ -87,6 +84,7 @@ Adafruit_BME280 bme;
 
 IOTTimer pumpTimer;
 IOTTimer soakTimer;
+IOTTimer connectTimer;
 
 // setup() runs once, when the device is first turned on.
 void setup() {
@@ -139,9 +137,6 @@ void bmeRead() {
 	bmeTemp = bme.readTemperature();
 	bmeHumidity = bme.readHumidity();
 	bmePressure = bme.readPressure();
-	// tempString = ;
-	// humString = ;
-	// pressureString = ;
 }
 
 void publishReadings() {
@@ -179,21 +174,24 @@ void MQTT_connect() {
        Serial.printf("%s\n",(char *)mqtt.connectErrorString(ret));
        Serial.printf("Retrying MQTT connection in 5 seconds..\n");
        mqtt.disconnect();
-       delay(5000);  // wait 5 seconds
+	   connectTimer.startTimer(5000);
+	   while (!connectTimer.isTimerReady());	   
   }
   Serial.printf("MQTT Connected!\n");
 }
 
 void runPump() {
+	Serial.printf("Pump about to run\n");
 	remotePump = atoi((char *)mqttSubPump.lastread);
-	if (moisture > drySoil || remotePump) {	
+	Serial.printf("Pump checked remote: %i\n", remotePump);
+	if (moisture > drySoil || remotePump > 0  ) {	
 		soakTimer.startTimer(5000); // TODO reset to 120000
 		if (soakTimer.isTimerReady()){
 			digitalWrite(PUMP_PIN, HIGH);
 			pumpTimer.startTimer(250);
 			while (!pumpTimer.isTimerReady());
 			digitalWrite(PUMP_PIN, LOW);
-			Serial.printf("Pump ran");
+			Serial.printf("Pump ran\n");
 		}
 	// TODO send text to say it watered
 	}
