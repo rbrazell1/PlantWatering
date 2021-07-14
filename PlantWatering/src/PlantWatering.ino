@@ -5,7 +5,7 @@
  * Date: 7-12-2021
  */
 
-#include "key.h""
+#include "key.h"
 #include "IOTTimer.h"
 
 #include <Wire.h>
@@ -52,6 +52,8 @@ unsigned long lastTime;
 String onlyDate;
 String onlyTime;
 
+// Air sensors
+int airQuality;
 
 TCPClient TheClient; 
 
@@ -70,15 +72,18 @@ IOTTimer pumpTimer;
 IOTTimer soakTimer;
 IOTTimer connectTimer;
 
+AirQualitySensor airQualitySensor(A1);
+
 // setup() runs once, when the device is first turned on.
 void setup() {
 	Serial.begin(115200);
-	 waitFor(Serial.isConnected, 10000); //wait for Serial Monitor to startup
-	 WiFi.connect();
-	 mqtt.subscribe(&mqttSubPump);
-	 pinSetUp();
-	 OLEDSetUp();
-	 bme.begin();
+	waitFor(Serial.isConnected, 10000); //wait for Serial Monitor to startup
+	WiFi.connect();
+	mqtt.subscribe(&mqttSubPump);
+	pinSetUp();
+	OLEDSetUp();
+	bme.begin();
+	airQualitySensor.init();
 }
 
 // loop() runs over and over again, as quickly as it can execute.
@@ -166,17 +171,24 @@ void MQTT_connect() {
 
 void runPump() {
 	Serial.printf("Pump about to run\n");
+	  Adafruit_MQTT_Subscribe *subscription;
+  while ((subscription = mqtt.readSubscription(1000))) {
+    if (subscription == &mqttSubPump) {
 	remotePump = atoi((char *)mqttSubPump.lastread);
+    }
+  }
 	Serial.printf("Pump checked remote: %i\n", remotePump);
-	if (moisture > drySoil || remotePump > 0  ) {	
+	if (moisture > drySoil || remotePump > 0) {	
 		soakTimer.startTimer(5000); // TODO reset to 120000
-		if (soakTimer.isTimerReady()){
+		Serial.printf("starting soak timer\n");
+		while (!soakTimer.isTimerReady());
 			digitalWrite(PUMP_PIN, HIGH);
 			pumpTimer.startTimer(250);
 			while (!pumpTimer.isTimerReady());
 			digitalWrite(PUMP_PIN, LOW);
 			Serial.printf("Pump ran\n");
+			remotePump = 0;
 		}
 	// TODO send text to say it watered
-	}
-}
+} 
+
