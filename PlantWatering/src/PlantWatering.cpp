@@ -168,7 +168,7 @@ void moistureDisplay() {
     onlyDate = Time.timeStr().substring(0, 10);
     onlyTime = Time.timeStr().substring(11, 19);
     display.setCursor(0, 0);
-    display.printf("Date: %s\nTime: %s\nMoisture: %i\nWater Level: %i\n", onlyDate.c_str(), onlyTime.c_str(), moisture, waterLevel);
+    display.printf("Date: %s\nTime: %s\nMoisture: %i\nWater Level: %i\nDust: %0.5f\nAir Quality: %i\n", onlyDate.c_str(), onlyTime.c_str(), moisture, waterLevel, concentration, airQuality);
     display.display();
     display.clearDisplay();
     runPump();
