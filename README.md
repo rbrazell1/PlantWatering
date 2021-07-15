@@ -1,2 +1,3 @@
-# PlantWatering
-Repo to hold all the parts of my plant watering system
+# Self Plant Watering 
+## Find your self lost in this futuristic self-watering plant project. 
+You might find yourself saying, “_where can I buy the awesome pot_?” or “_who makes that great base_?” The answer is: **_You_**, with this repository you can make all of this a reality for yourself. Inside you’ll find the [code](https://github.com/rbrazell1/PlantWatering/tree/main/PlantWatering) to run it and the [files to print](https://github.com/rbrazell1/PlantWatering/tree/main/3DPrinting) your very own pot and base. For a parts list check out my [hackster](https://www.hackster.io/brazellrussell/self-watering-plant-9496ff)!
