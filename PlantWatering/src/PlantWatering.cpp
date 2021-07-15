@@ -168,7 +168,7 @@ void moistureDisplay() {
     onlyDate = Time.timeStr().substring(0, 10);
     onlyTime = Time.timeStr().substring(11, 19);
     display.setCursor(0, 0);
-    display.printf("Date: %s\nTime: %s\nMoisture: %i\n Water Level: %i\n", onlyDate.c_str(), onlyTime.c_str(), moisture, waterLevel);
+    display.printf("Date: %s\nTime: %s\nMoisture: %i\nWater Level: %i\n", onlyDate.c_str(), onlyTime.c_str(), moisture, waterLevel);
     display.display();
     display.clearDisplay();
     runPump();
@@ -236,7 +236,7 @@ void runPump() {
     }
     if ((moisture > drySoil || remotePump > 0 || buttonRead == HIGH) && soakTimer.isTimerReady()) {
         digitalWrite(PUMP_PIN, HIGH);
-        pumpTimer.startTimer(250);
+        pumpTimer.startTimer(400);
         while (!pumpTimer.isTimerReady());
         digitalWrite(PUMP_PIN, LOW);
         Serial.printf("Pump ran\n");
